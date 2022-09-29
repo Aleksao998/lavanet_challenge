@@ -1,0 +1,20 @@
+# Eclude InteliJ's project specific settings file
+.idea
+
+# Exclude build .exe file from version control
+dist/
+main.exe
+main
+
+# Exclude macOS Leftovers
+.DS_Store
+.vscode
+
+# Exclude build folder
+artifacts
+
+# Exclude log files
+*.log
+
+# Exclude vendor folder
+vendor/
