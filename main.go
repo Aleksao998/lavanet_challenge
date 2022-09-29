@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-//     asdadsasda
+// asdadsasda
 func main() {
-	fmt.Println("Hello world")
+	fmt.Println("Hello world!")
 }
