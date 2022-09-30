@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"github.com/Aleksao998/lavanet_challenge/command/root"
+)
 
 func main() {
-	fmt.Println("Hello world!")
+	root.NewRootCommand().Execute()
 }
