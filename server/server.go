@@ -31,6 +31,7 @@ func NewServer(config *Config) (*Server, error) {
 	// TODO start services and remove dummy code
 	server.logger.Info("", "network", server.config.Network)
 	server.logger.Info("", "port", server.config.Port)
+
 	go func() {
 		for i := 1; i <= 5; i++ {
 			server.logger.Info("INFO LOG", "num", i)

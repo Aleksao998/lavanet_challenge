@@ -15,7 +15,7 @@ type RootCommand struct {
 func NewRootCommand() *RootCommand {
 	rootCommand := &RootCommand{
 		baseCmd: &cobra.Command{
-			Short: "Lavanet_challange is a take-home gRPC server and client challenge",
+			Short: "Lavanet_challenge is a take-home gRPC server and client challenge",
 		},
 	}
 
