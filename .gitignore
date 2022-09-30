@@ -20,4 +20,4 @@ artifacts
 vendor/
 
 # Exclude binary files
-lavanet_challange
+build/
