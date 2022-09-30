@@ -1,14 +1,18 @@
 package server
 
-import "github.com/hashicorp/go-hclog"
+import (
+	"net"
+
+	"github.com/hashicorp/go-hclog"
+)
 
 // Config is used to parametrize the lavanet_challenge client
 type Config struct {
-	// network gRPC endpoint
-	Network string
+	// NetworkGrpcAddress is network gRPC endpoint
+	NetworkGrpcAddress *net.TCPAddr
 
-	// gRPC server port
-	Port uint64
+	// GrpcAddress is gRPC address of lavanet_challenge client
+	GrpcAddress *net.TCPAddr
 
 	// logLevel represent a log type [ERROR, INFO, DEBUG]
 	LogLevel hclog.Level

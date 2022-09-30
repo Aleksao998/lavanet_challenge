@@ -1,6 +1,8 @@
 package server
 
 import (
+	"fmt"
+
 	"github.com/Aleksao998/lavanet_challenge/command"
 	"github.com/Aleksao998/lavanet_challenge/command/helper"
 	"github.com/Aleksao998/lavanet_challenge/server"
@@ -9,9 +11,10 @@ import (
 
 func GetCommand() *cobra.Command {
 	showCmd := &cobra.Command{
-		Use:   "server",
-		Short: "The default command that starts lavanet_challenge client",
-		Run:   runCommand,
+		Use:     "server",
+		Short:   "The default command that starts lavanet_challenge client",
+		PreRunE: runPreRun,
+		Run:     runCommand,
 	}
 
 	setFlags(showCmd)
@@ -21,16 +24,10 @@ func GetCommand() *cobra.Command {
 
 func setFlags(cmd *cobra.Command) {
 	cmd.Flags().StringVar(
-		&params.network,
-		network,
-		command.OsmosisMainnetGrpcEndpoint,
+		&params.networkGrpcAddressRaw,
+		networkGrpcAddress,
+		fmt.Sprintf("%s:%d", command.OsmosisMainnetGrpcEndpoint, command.OsmosisMainnetGrpcPort),
 		"network gRPC endpoint",
-	)
-	cmd.Flags().Uint64Var(
-		&params.port,
-		port,
-		command.OsmosisMainnetGrpcPort,
-		"gRPC server port",
 	)
 	cmd.Flags().StringVar(
 		&params.logLevel,
@@ -44,6 +41,12 @@ func setFlags(cmd *cobra.Command) {
 		"",
 		"write all logs to the file at specified location instead of writing them to console",
 	)
+	cmd.Flags().StringVar(
+		&params.grpcAddressRaw,
+		grpcAddress,
+		fmt.Sprintf("%s:%d", command.LocalHostBinding, command.DefaultGRPCPort),
+		"the GRPC interface",
+	)
 }
 
 func runCommand(cmd *cobra.Command, _ []string) {
@@ -54,6 +57,15 @@ func runCommand(cmd *cobra.Command, _ []string) {
 
 		return
 	}
+}
+
+func runPreRun(cmd *cobra.Command, _ []string) error {
+	// init raw params
+	if err := params.initRawParams(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func runServerLoop(

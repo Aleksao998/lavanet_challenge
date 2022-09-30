@@ -29,8 +29,8 @@ func NewServer(config *Config) (*Server, error) {
 	}
 
 	// TODO start services and remove dummy code
-	server.logger.Info("", "network", server.config.Network)
-	server.logger.Info("", "port", server.config.Port)
+	server.logger.Info("", "NetworkGrpcAddress", server.config.NetworkGrpcAddress)
+	server.logger.Info("", "GrpcAddress", server.config.GrpcAddress)
 
 	go func() {
 		for i := 1; i <= 5; i++ {
