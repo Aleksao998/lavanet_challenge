@@ -3,15 +3,19 @@ package server
 import (
 	"fmt"
 	"os"
-	"time"
 
+	"github.com/Aleksao998/lavanet_challenge/proxy"
 	"github.com/hashicorp/go-hclog"
 )
 
 // Server is the central manager of the blockchain client
 type Server struct {
 	logger hclog.Logger
+
+	// config server config
 	config *Config
+
+	forwardProxy *proxy.ForwardProxy
 }
 
 // NewServer creates a new lavanet_challenge server, using the passed in configuration
@@ -28,18 +32,20 @@ func NewServer(config *Config) (*Server, error) {
 		config: config,
 	}
 
-	// TODO start services and remove dummy code
-	server.logger.Info("", "network", server.config.Network)
-	server.logger.Info("", "port", server.config.Port)
+	// initialize forward proxy
+	forwardProxy := proxy.NewForwardProxy(
+		logger,
+		server.config.NetworkGrpcAddress,
+		server.config.GrpcAddress,
+	)
 
-	go func() {
-		for i := 1; i <= 5; i++ {
-			server.logger.Info("INFO LOG", "num", i)
-			server.logger.Error("ERROR LOG", "num", i)
-			server.logger.Debug("DEBBUG LOG", "num", i)
-			time.Sleep(3 * time.Second)
-		}
-	}()
+	// assign forward proxy to the server
+	server.forwardProxy = forwardProxy
+
+	// setup and start forwardProxy
+	if err := forwardProxy.Start(); err != nil {
+		return nil, err
+	}
 
 	return server, nil
 }
@@ -81,4 +87,7 @@ func newCLILogger(config *Config) hclog.Logger {
 }
 
 // Close closes the lavanet_challenge server
-func (s *Server) Close() {}
+func (s *Server) Close() {
+	s.logger.Debug("Closing server")
+	s.forwardProxy.Close()
+}
