@@ -14,9 +14,9 @@ type Config struct {
 	// GrpcAddress is gRPC address of lavanet_challenge client
 	GrpcAddress *net.TCPAddr
 
-	// logLevel represent a log type [ERROR, INFO, DEBUG]
+	// LogLevel represent a log type [ERROR, INFO, DEBUG]
 	LogLevel hclog.Level
 
-	// logFileLocation location of log file
+	// LogFilePath location of log file
 	LogFilePath string
 }

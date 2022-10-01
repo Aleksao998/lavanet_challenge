@@ -11,7 +11,7 @@ import (
 )
 
 type ForwardProxy struct {
-	// grpcAddress is gRPC address of lavanet_challenge client
+	// grpcAddress is gRPC address for forward proxy server
 	grpcAddress *net.TCPAddr
 
 	// tendermintV1Beta1Client represents connection with client
@@ -32,7 +32,7 @@ func NewForwardProxy(
 	}
 }
 
-// Start starts service
+// Start starts forward proxy service
 func (s *ForwardProxy) Start() error {
 	// create empty grpc server
 	grpcServer := grpc.NewServer()
@@ -74,7 +74,7 @@ func (s *ForwardProxy) registerServices(grpcServer *grpc.Server) {
 	)
 }
 
-// Close closes service
+// Close closes forward proxy service
 func (s *ForwardProxy) Close() {
 	s.logger.Debug("Closing service server")
 
