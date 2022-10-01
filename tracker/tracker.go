@@ -37,6 +37,7 @@ func NewTracker(config *Config) (*Tracker, error) {
 		tracker.logger,
 		tracker.config.ClientGrpcAddress,
 		tracker.config.PollingTime,
+		tracker.config.OutputFilePath,
 	)
 	if err != nil {
 		return nil, err

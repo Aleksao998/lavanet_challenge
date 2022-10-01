@@ -25,15 +25,21 @@ type blockTracker struct {
 
 	// ticker is used to trigger polling at specific interval
 	ticker *time.Ticker
+
+	// results parses tracker data and outputs in the specified file
+	results blockTrackerResults
+
+	// pendingBlocks are blocks which are waiting to be printed
+	pendingBlocks []blockInfo
 }
 
 // blockInfo is necessary information from block
 type blockInfo struct {
 	// number is a block number
-	number uint64
+	Number uint64 `json:"number"`
 
 	// hash is a block hash
-	hash string
+	Hash string `json:"hash"`
 }
 
 // NewBlockTracker creates a new block tracker service
@@ -43,12 +49,15 @@ func NewBlockTracker(
 	logger hclog.Logger,
 	clientGrpcAddress *net.TCPAddr,
 	pollingTime uint64,
+	outputFilePath string,
 ) (*blockTracker, error) {
 	blockTracker := &blockTracker{
 		logger:                  logger.Named("block-tracker"),
 		tendermintV1Beta1Client: tendermintv1beta1.NewClient(logger, clientGrpcAddress),
 		pollingTime:             pollingTime,
 		ticker:                  time.NewTicker(time.Second * time.Duration(pollingTime)),
+		results:                 newBlockTrackerResults(logger, outputFilePath),
+		pendingBlocks:           make([]blockInfo, 0, 5), //print 5 blocks at one the time
 	}
 
 	// fetch the latest block from client
@@ -58,7 +67,12 @@ func NewBlockTracker(
 	}
 
 	// set from block
-	blockTracker.fromBlock = blockInfo.number
+	blockTracker.fromBlock = blockInfo.Number
+
+	// append latest block
+	if err := blockTracker.addBlockInPending(*blockInfo); err != nil {
+		return nil, err
+	}
 
 	return blockTracker, nil
 }
@@ -96,32 +110,67 @@ func (s *blockTracker) fetchBlocks() error {
 		return err
 	}
 
-	s.logger.Debug("BlockInfo", "number", blockInfo.number, "hash", blockInfo.hash)
+	s.logger.Debug("Latest block received", "number", blockInfo.Number, "hash", blockInfo.Hash)
 
 	// if next block arrived
 	// set new block
-	if s.isNextBlock(blockInfo.number) {
-		s.fromBlock = blockInfo.number
-		s.logger.Info("BlockInfo", "number", blockInfo.number, "hash", blockInfo.hash)
+	if s.isNextBlock(blockInfo.Number) {
+		// add block in the pending queue
+		if err := s.addBlockInPending(*blockInfo); err != nil {
+			return err
+		}
+
+		// set new from
+		s.fromBlock = blockInfo.Number
+
+		s.logger.Debug("BlockInfo", "number", blockInfo.Number, "hash", blockInfo.Hash)
 	}
 
 	// if gap exists
 	// fetch all blocks in between
 	// and set new block
-	if s.gapExists(blockInfo.number) {
-		s.logger.Debug("Gap exists", "from", s.fromBlock, "latest", blockInfo.number)
+	if s.gapExists(blockInfo.Number) {
+		s.logger.Debug("Gap exists", "from", s.fromBlock, "latest", blockInfo.Number)
 
-		blocks, err := s.getBlocks(s.fromBlock, blockInfo.number)
+		// get missing blocks
+		blocks, err := s.getBlocks(s.fromBlock, blockInfo.Number)
 		if err != nil {
 			return err
 		}
 
-		// TODO remove
+		// add blocks in the pending queue
 		for _, block := range blocks {
-			s.logger.Info("BlockInfo", "number", block.number, "hash", block.hash)
+			s.logger.Debug("BlockInfo", "number", blockInfo.Number, "hash", blockInfo.Hash)
+
+			if err := s.addBlockInPending(block); err != nil {
+				return err
+			}
 		}
 
-		s.logger.Info("BlockInfo", "number", blockInfo.number, "hash", blockInfo.hash)
+		// add latest block in the pending queue
+		if err := s.addBlockInPending(*blockInfo); err != nil {
+			return err
+		}
+
+		// set new from
+		s.fromBlock = blockInfo.Number
+	}
+
+	return nil
+}
+
+// addBlockInPending adds block in pending queue
+// if queue gets full print results and empty
+func (s *blockTracker) addBlockInPending(block blockInfo) error {
+	s.pendingBlocks = append(s.pendingBlocks, block)
+
+	// if full print and empty
+	if len(s.pendingBlocks) == 5 {
+		if err := s.results.writeResults(s.pendingBlocks); err != nil {
+			return err
+		}
+
+		s.pendingBlocks = nil
 	}
 
 	return nil
@@ -181,8 +230,8 @@ func (s *blockTracker) getBlock(number uint64) (*blockInfo, error) {
 
 	// extract data from response
 	blockInfo := &blockInfo{
-		number: uint64(res.GetBlock().Header.Height),
-		hash:   string(res.BlockId.Hash),
+		Number: uint64(res.GetBlock().Header.Height),
+		Hash:   string(res.BlockId.Hash),
 	}
 
 	return blockInfo, nil
@@ -203,8 +252,8 @@ func (s *blockTracker) getLatestBlock() (*blockInfo, error) {
 
 	// extract data from response
 	blockInfo := &blockInfo{
-		number: uint64(res.GetBlock().Header.Height),
-		hash:   string(res.BlockId.Hash),
+		Number: uint64(res.GetBlock().Header.Height),
+		Hash:   string(res.BlockId.Hash),
 	}
 
 	return blockInfo, nil

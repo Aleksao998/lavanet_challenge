@@ -10,10 +10,10 @@ import (
 )
 
 const (
-	networkGrpcAddress  = "network-grpc-address"
-	logFileLocationFlag = "log-to"
-	logLevelFlag        = "log-level"
-	grpcAddress         = "grpc-address"
+	networkGrpcAddressFlag = "network-grpc-address"
+	logFileLocationFlag    = "log-to"
+	logLevelFlag           = "log-level"
+	grpcAddressFlag        = "grpc-address"
 )
 
 var (

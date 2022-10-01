@@ -10,22 +10,22 @@ import (
 )
 
 func GetCommand() *cobra.Command {
-	showCmd := &cobra.Command{
+	tracker := &cobra.Command{
 		Use:     "tracker",
 		Short:   "The default command that starts tracker client",
 		PreRunE: runPreRun,
 		Run:     runCommand,
 	}
 
-	setFlags(showCmd)
+	setFlags(tracker)
 
-	return showCmd
+	return tracker
 }
 
 func setFlags(cmd *cobra.Command) {
 	cmd.Flags().StringVar(
 		&params.clientGrpcAddressRaw,
-		clientGrpcAddress,
+		clientGrpcAddressFlag,
 		fmt.Sprintf("%s:%d", command.LocalHostBinding, command.DefaultGRPCPort),
 		"client gRPC endpoint",
 	)
@@ -41,9 +41,15 @@ func setFlags(cmd *cobra.Command) {
 		"",
 		"write all logs to the file at specified location instead of writing them to console",
 	)
+	cmd.Flags().StringVar(
+		&params.outputFileLocation,
+		outputFileLocationFlag,
+		"test_results.txt",
+		"write tracker data to the file at specified location",
+	)
 	cmd.Flags().Uint64Var(
 		&params.pollingTime,
-		pollingTime,
+		pollingTimeFlag,
 		2,
 		"polling time in seconds",
 	)

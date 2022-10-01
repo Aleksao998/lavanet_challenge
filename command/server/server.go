@@ -10,22 +10,22 @@ import (
 )
 
 func GetCommand() *cobra.Command {
-	showCmd := &cobra.Command{
+	serverCmd := &cobra.Command{
 		Use:     "server",
 		Short:   "The default command that starts lavanet_challenge client",
 		PreRunE: runPreRun,
 		Run:     runCommand,
 	}
 
-	setFlags(showCmd)
+	setFlags(serverCmd)
 
-	return showCmd
+	return serverCmd
 }
 
 func setFlags(cmd *cobra.Command) {
 	cmd.Flags().StringVar(
 		&params.networkGrpcAddressRaw,
-		networkGrpcAddress,
+		networkGrpcAddressFlag,
 		fmt.Sprintf("%s:%d", command.OsmosisMainnetGrpcEndpoint, command.OsmosisMainnetGrpcPort),
 		"network gRPC endpoint",
 	)
@@ -43,7 +43,7 @@ func setFlags(cmd *cobra.Command) {
 	)
 	cmd.Flags().StringVar(
 		&params.grpcAddressRaw,
-		grpcAddress,
+		grpcAddressFlag,
 		fmt.Sprintf("%s:%d", command.LocalHostBinding, command.DefaultGRPCPort),
 		"the GRPC interface",
 	)
