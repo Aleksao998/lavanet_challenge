@@ -1,4 +1,4 @@
-package proxy
+package client
 
 import (
 	"net"
@@ -9,15 +9,15 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-type networkClient struct {
+type NetworkClient struct {
 	// client represents network client
-	client tendermintv1beta1.ServiceClient
+	Client tendermintv1beta1.ServiceClient
 
 	// connection is grpc client connection
 	connection *grpc.ClientConn
 
 	// grpcAddress is network gRPC endpoint
-	grpcAddress *net.TCPAddr
+	GrpcAddress *net.TCPAddr
 
 	logger hclog.Logger
 }
@@ -25,8 +25,8 @@ type networkClient struct {
 func NewNetworkClient(
 	logger hclog.Logger,
 	networkGrpcAddress *net.TCPAddr,
-) networkClient {
-	logger = logger.Named("forward-proxy-network-client")
+) NetworkClient {
+	logger = logger.Named("network-client")
 
 	// Dial network grpc client
 	conn, err := grpc.Dial(
@@ -40,17 +40,17 @@ func NewNetworkClient(
 	logger.Info("GRPC network client running", "addr", networkGrpcAddress.String())
 
 	// initialize network client
-	return networkClient{
-		client:      tendermintv1beta1.NewServiceClient(conn),
+	return NetworkClient{
+		Client:      tendermintv1beta1.NewServiceClient(conn),
+		GrpcAddress: networkGrpcAddress,
 		connection:  conn,
-		grpcAddress: networkGrpcAddress,
 		logger:      logger,
 	}
 }
 
 // Close closes network client
-func (s *networkClient) Close() {
-	s.logger.Debug("Closing gRPC client connection", "src", s.grpcAddress)
+func (s *NetworkClient) Close() {
+	s.logger.Debug("Closing gRPC client connection", "src", s.GrpcAddress.String())
 
 	s.connection.Close()
 }
