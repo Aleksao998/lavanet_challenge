@@ -60,12 +60,7 @@ func runCommand(cmd *cobra.Command, _ []string) {
 }
 
 func runPreRun(cmd *cobra.Command, _ []string) error {
-	// init raw params
-	if err := params.initRawParams(); err != nil {
-		return err
-	}
-
-	return nil
+	return params.initRawParams()
 }
 
 func runServerLoop(
