@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/Aleksao998/lavanet_challenge/command/server"
+	"github.com/Aleksao998/lavanet_challenge/command/tracker"
 	"github.com/spf13/cobra"
 )
 
@@ -27,6 +28,7 @@ func NewRootCommand() *RootCommand {
 func (rc *RootCommand) registerSubCommands() {
 	rc.baseCmd.AddCommand(
 		server.GetCommand(),
+		tracker.GetCommand(),
 	)
 }
 

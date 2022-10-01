@@ -3,9 +3,8 @@ package proxy
 import (
 	"net"
 
-	tendermintv1beta1 "cosmossdk.io/api/cosmos/base/tendermint/v1beta1"
-	"github.com/Aleksao998/lavanet_challenge/proxy/client"
-	"github.com/Aleksao998/lavanet_challenge/proxy/services"
+	tendermintv1beta1proto "cosmossdk.io/api/cosmos/base/tendermint/v1beta1"
+	"github.com/Aleksao998/lavanet_challenge/services/tendermintv1beta1"
 	"github.com/hashicorp/go-hclog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -15,8 +14,8 @@ type ForwardProxy struct {
 	// grpcAddress is gRPC address of lavanet_challenge client
 	grpcAddress *net.TCPAddr
 
-	// networkClient represents connection with network client
-	networkClient client.NetworkClient
+	// tendermintV1Beta1Client represents connection with client
+	tendermintV1Beta1Client tendermintv1beta1.Client
 
 	logger hclog.Logger
 }
@@ -27,9 +26,9 @@ func NewForwardProxy(
 	networkGrpcAddress *net.TCPAddr,
 ) *ForwardProxy {
 	return &ForwardProxy{
-		logger:        logger.Named("forward-proxy"),
-		grpcAddress:   grpcAddress,
-		networkClient: client.NewNetworkClient(logger, networkGrpcAddress),
+		logger:                  logger.Named("forward-proxy"),
+		grpcAddress:             grpcAddress,
+		tendermintV1Beta1Client: tendermintv1beta1.NewClient(logger, networkGrpcAddress),
 	}
 }
 
@@ -66,10 +65,10 @@ func (s *ForwardProxy) registerServices(grpcServer *grpc.Server) {
 	reflection.Register(grpcServer)
 
 	// register tendermintv1beta1 service
-	tendermintv1beta1.RegisterServiceServer(
+	tendermintv1beta1proto.RegisterServiceServer(
 		grpcServer,
-		services.NewService(
-			s.networkClient,
+		tendermintv1beta1.NewService(
+			s.tendermintV1Beta1Client,
 			s.logger,
 		),
 	)
@@ -79,5 +78,5 @@ func (s *ForwardProxy) registerServices(grpcServer *grpc.Server) {
 func (s *ForwardProxy) Close() {
 	s.logger.Debug("Closing service server")
 
-	s.networkClient.Close()
+	s.tendermintV1Beta1Client.Close()
 }
