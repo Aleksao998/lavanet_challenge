@@ -34,7 +34,7 @@ func NewServer(config *Config) (*Server, error) {
 
 	// initialize forward proxy
 	forwardProxy := proxy.NewForwardProxy(
-		logger,
+		server.logger,
 		server.config.GrpcAddress,
 		server.config.NetworkGrpcAddress,
 	)
@@ -42,7 +42,7 @@ func NewServer(config *Config) (*Server, error) {
 	// assign forward proxy to the server
 	server.forwardProxy = forwardProxy
 
-	// setup and start forwardProxy
+	// setup and start forward proxy
 	if err := forwardProxy.Start(); err != nil {
 		return nil, err
 	}
@@ -53,5 +53,6 @@ func NewServer(config *Config) (*Server, error) {
 // Close closes the lavanet_challenge server
 func (s *Server) Close() {
 	s.logger.Debug("Closing server")
+
 	s.forwardProxy.Close()
 }

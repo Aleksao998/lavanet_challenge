@@ -11,6 +11,9 @@ import (
 type Tracker struct {
 	logger hclog.Logger
 
+	// blockTracker tracks latest block
+	blockTracker *blockTracker
+
 	// config server config
 	config *Config
 }
@@ -29,10 +32,30 @@ func NewTracker(config *Config) (*Tracker, error) {
 		config: config,
 	}
 
+	// initialize block tracker
+	blockTracker, err := NewBlockTracker(
+		tracker.logger,
+		tracker.config.ClientGrpcAddress,
+		tracker.config.PollingTime,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	// assign block tracker to the tracker
+	tracker.blockTracker = blockTracker
+
+	// setup and start block tracker
+	if err := blockTracker.Start(); err != nil {
+		return nil, err
+	}
+
 	return tracker, nil
 }
 
 // Close closes the tracker service
 func (s *Tracker) Close() {
 	s.logger.Debug("Closing tracker")
+
+	s.blockTracker.Close()
 }
