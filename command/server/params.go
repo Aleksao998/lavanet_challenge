@@ -27,7 +27,7 @@ type serverParams struct {
 	// networkGrpcAddressRaw is a raw network gRPC endpoint
 	networkGrpcAddressRaw string
 
-	// logLevel represent a log type [ERROR, INFO, DEBUG]
+	// logLevel is a log type [ERROR, INFO, DEBUG]
 	logLevel string
 
 	// logFileLocation location of log file

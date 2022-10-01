@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/Aleksao998/lavanet_challenge/command"
+	"github.com/hashicorp/go-hclog"
 )
 
 type ClientCloseResult struct {
@@ -88,4 +89,40 @@ func ResolveAddr(address string, defaultIP command.IPBinding) (*net.TCPAddr, err
 	}
 
 	return addr, nil
+}
+
+// newFileLogger returns logger instance that writes all logs to a specified file.
+func newFileLogger(logLevel hclog.Level, logFilePath string) (hclog.Logger, error) {
+	logFileWriter, err := os.Create(logFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("could not create log file, %w", err)
+	}
+
+	return hclog.New(&hclog.LoggerOptions{
+		Name:   "lavanet_challenge",
+		Level:  logLevel,
+		Output: logFileWriter,
+	}), nil
+}
+
+// newCLILogger returns logger instance that sends all logs to standard output
+func newCLILogger(logLevel hclog.Level) hclog.Logger {
+	return hclog.New(&hclog.LoggerOptions{
+		Name:  "lavanet_challenge",
+		Level: logLevel,
+	})
+}
+
+// newLoggerFromConfig creates a new logger which logs to a specified file or standard output.
+func NewLoggerFromConfig(logLevel hclog.Level, logFilePath string) (hclog.Logger, error) {
+	if logFilePath != "" {
+		fileLoggerInstance, err := newFileLogger(logLevel, logFilePath)
+		if err != nil {
+			return nil, err
+		}
+
+		return fileLoggerInstance, nil
+	}
+
+	return newCLILogger(logLevel), nil
 }
