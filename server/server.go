@@ -35,8 +35,8 @@ func NewServer(config *Config) (*Server, error) {
 	// initialize forward proxy
 	forwardProxy := proxy.NewForwardProxy(
 		logger,
-		server.config.NetworkGrpcAddress,
 		server.config.GrpcAddress,
+		server.config.NetworkGrpcAddress,
 	)
 
 	// assign forward proxy to the server
