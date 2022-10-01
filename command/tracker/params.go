@@ -10,10 +10,11 @@ import (
 )
 
 const (
-	clientGrpcAddress   = "client-grpc-address"
-	logFileLocationFlag = "log-to"
-	logLevelFlag        = "log-level"
-	pollingTime         = "polling-time"
+	clientGrpcAddressFlag  = "client-grpc-address"
+	logFileLocationFlag    = "log-to"
+	logLevelFlag           = "log-level"
+	pollingTimeFlag        = "polling-time"
+	outputFileLocationFlag = "output-to"
 )
 
 var (
@@ -35,6 +36,9 @@ type trackerParams struct {
 
 	// pollingTime is a polling time in seconds
 	pollingTime uint64
+
+	// outputFileLocation location of tracker output file
+	outputFileLocation string
 }
 
 func (p *trackerParams) initRawParams() error {
@@ -60,5 +64,6 @@ func (p *trackerParams) generateConfig() *tracker.Config {
 		PollingTime:       p.pollingTime,
 		LogLevel:          hclog.LevelFromString(p.logLevel),
 		LogFilePath:       p.logFileLocation,
+		OutputFilePath:    p.outputFileLocation,
 	}
 }

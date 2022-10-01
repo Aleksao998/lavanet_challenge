@@ -19,4 +19,7 @@ type Config struct {
 
 	// PollingTime is a polling time in seconds
 	PollingTime uint64
+
+	// OutputFilePath location of output file
+	OutputFilePath string
 }

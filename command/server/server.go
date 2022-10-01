@@ -25,7 +25,7 @@ func GetCommand() *cobra.Command {
 func setFlags(cmd *cobra.Command) {
 	cmd.Flags().StringVar(
 		&params.networkGrpcAddressRaw,
-		networkGrpcAddress,
+		networkGrpcAddressFlag,
 		fmt.Sprintf("%s:%d", command.OsmosisMainnetGrpcEndpoint, command.OsmosisMainnetGrpcPort),
 		"network gRPC endpoint",
 	)
@@ -43,7 +43,7 @@ func setFlags(cmd *cobra.Command) {
 	)
 	cmd.Flags().StringVar(
 		&params.grpcAddressRaw,
-		grpcAddress,
+		grpcAddressFlag,
 		fmt.Sprintf("%s:%d", command.LocalHostBinding, command.DefaultGRPCPort),
 		"the GRPC interface",
 	)

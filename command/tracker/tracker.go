@@ -25,7 +25,7 @@ func GetCommand() *cobra.Command {
 func setFlags(cmd *cobra.Command) {
 	cmd.Flags().StringVar(
 		&params.clientGrpcAddressRaw,
-		clientGrpcAddress,
+		clientGrpcAddressFlag,
 		fmt.Sprintf("%s:%d", command.LocalHostBinding, command.DefaultGRPCPort),
 		"client gRPC endpoint",
 	)
@@ -41,9 +41,15 @@ func setFlags(cmd *cobra.Command) {
 		"",
 		"write all logs to the file at specified location instead of writing them to console",
 	)
+	cmd.Flags().StringVar(
+		&params.outputFileLocation,
+		outputFileLocationFlag,
+		"",
+		"write tracker data to the file at specified location",
+	)
 	cmd.Flags().Uint64Var(
 		&params.pollingTime,
-		pollingTime,
+		pollingTimeFlag,
 		2,
 		"polling time in seconds",
 	)
