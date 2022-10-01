@@ -2,7 +2,6 @@ package tracker
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/Aleksao998/lavanet_challenge/command/helper"
 	"github.com/hashicorp/go-hclog"
@@ -29,18 +28,6 @@ func NewTracker(config *Config) (*Tracker, error) {
 		logger: logger,
 		config: config,
 	}
-
-	// TODO start services and remove dummy code
-	tracker.logger.Info("", "ClientGrpcAddress", tracker.config.ClientGrpcAddress)
-
-	go func() {
-		for i := 1; i <= 5; i++ {
-			tracker.logger.Info("INFO LOG", "num", i)
-			tracker.logger.Error("ERROR LOG", "num", i)
-			tracker.logger.Debug("DEBBUG LOG", "num", i)
-			time.Sleep(3 * time.Second)
-		}
-	}()
 
 	return tracker, nil
 }

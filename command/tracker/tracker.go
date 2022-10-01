@@ -27,7 +27,7 @@ func setFlags(cmd *cobra.Command) {
 		&params.clientGrpcAddressRaw,
 		clientGrpcAddress,
 		fmt.Sprintf("%s:%d", command.LocalHostBinding, command.DefaultGRPCPort),
-		"network gRPC endpoint",
+		"client gRPC endpoint",
 	)
 	cmd.Flags().StringVar(
 		&params.logLevel,
