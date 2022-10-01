@@ -21,3 +21,6 @@ vendor/
 
 # Exclude binary files
 build/
+
+# Exclude all test results
+*.txt

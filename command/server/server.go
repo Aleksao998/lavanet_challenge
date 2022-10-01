@@ -10,16 +10,16 @@ import (
 )
 
 func GetCommand() *cobra.Command {
-	showCmd := &cobra.Command{
+	serverCmd := &cobra.Command{
 		Use:     "server",
 		Short:   "The default command that starts lavanet_challenge client",
 		PreRunE: runPreRun,
 		Run:     runCommand,
 	}
 
-	setFlags(showCmd)
+	setFlags(serverCmd)
 
-	return showCmd
+	return serverCmd
 }
 
 func setFlags(cmd *cobra.Command) {
