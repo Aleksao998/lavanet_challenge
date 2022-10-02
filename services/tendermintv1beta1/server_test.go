@@ -25,10 +25,10 @@ func setupServerService() (*Server, error) {
 	}
 
 	client := Client{
-		Client:      mockClient{},
-		connection:  nil,
+		Client:      MockClient{},
+		Connection:  nil,
 		GrpcAddress: grpcAddress,
-		logger:      hclog.NewNullLogger(),
+		Logger:      hclog.NewNullLogger(),
 	}
 
 	return NewService(client, hclog.NewNullLogger()), nil
@@ -49,7 +49,7 @@ func TestServices(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			expectedOutput, _ := mockClient{}.GetLatestBlock(
+			expectedOutput, _ := MockClient{}.GetLatestBlock(
 				context.Background(),
 				&tendermintv1beta1.GetLatestBlockRequest{},
 			)
@@ -71,7 +71,7 @@ func TestServices(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			expectedOutput, _ := mockClient{}.GetNodeInfo(
+			expectedOutput, _ := MockClient{}.GetNodeInfo(
 				context.Background(),
 				&tendermintv1beta1.GetNodeInfoRequest{},
 			)
@@ -93,7 +93,7 @@ func TestServices(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			expectedOutput, _ := mockClient{}.GetSyncing(
+			expectedOutput, _ := MockClient{}.GetSyncing(
 				context.Background(),
 				&tendermintv1beta1.GetSyncingRequest{},
 			)
@@ -115,7 +115,7 @@ func TestServices(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			expectedOutput, _ := mockClient{}.GetBlockByHeight(
+			expectedOutput, _ := MockClient{}.GetBlockByHeight(
 				context.Background(),
 				&tendermintv1beta1.GetBlockByHeightRequest{},
 			)
@@ -137,7 +137,7 @@ func TestServices(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			expectedOutput, _ := mockClient{}.GetLatestValidatorSet(
+			expectedOutput, _ := MockClient{}.GetLatestValidatorSet(
 				context.Background(),
 				&tendermintv1beta1.GetLatestValidatorSetRequest{},
 			)
@@ -159,7 +159,7 @@ func TestServices(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			expectedOutput, _ := mockClient{}.GetValidatorSetByHeight(
+			expectedOutput, _ := MockClient{}.GetValidatorSetByHeight(
 				context.Background(),
 				&tendermintv1beta1.GetValidatorSetByHeightRequest{},
 			)

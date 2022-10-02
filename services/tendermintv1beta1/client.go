@@ -14,12 +14,12 @@ type Client struct {
 	Client tendermintv1beta1.ServiceClient
 
 	// connection is grpc client connection
-	connection *grpc.ClientConn
+	Connection *grpc.ClientConn
 
 	// GrpcAddress is network gRPC endpoint
 	GrpcAddress *net.TCPAddr
 
-	logger hclog.Logger
+	Logger hclog.Logger
 }
 
 func NewClient(
@@ -43,14 +43,14 @@ func NewClient(
 	return Client{
 		Client:      tendermintv1beta1.NewServiceClient(conn),
 		GrpcAddress: networkGrpcAddress,
-		connection:  conn,
-		logger:      logger,
+		Connection:  conn,
+		Logger:      logger,
 	}
 }
 
 // Close closes network client
 func (s *Client) Close() {
-	s.logger.Debug("Closing gRPC client connection", "src", s.GrpcAddress.String())
+	s.Logger.Debug("Closing gRPC client connection", "src", s.GrpcAddress.String())
 
-	s.connection.Close()
+	s.Connection.Close()
 }
