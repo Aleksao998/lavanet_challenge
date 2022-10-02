@@ -36,4 +36,5 @@ jobs:
           submodules: recursive
 
       - name: Go test
-          run: go test -coverprofile coverage.out -timeout 5m ./...
+        run: go test -coverprofile coverage.out -timeout 5m ./...
+
