@@ -14,6 +14,7 @@ const (
 	osmosisMainnetGrpcRaw = "grpc.osmosis.zone:9090"
 )
 
+// setupServerService create a dummy Server used for testing
 func setupServerService() (*Server, error) {
 	// generate networkGrpcAddress from raw
 	grpcAddress, err := helper.ResolveAddr(

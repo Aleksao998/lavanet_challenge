@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/go-hclog"
 )
 
+// result represents structure for block tracker results
 type result struct {
 	TestResult []blockInfo `json:"test_result"`
 }
@@ -61,6 +62,7 @@ func (b blockTrackerResult) writeResults(blocks []blockInfo) error {
 	return nil
 }
 
+// getTestFileName formats file name
 func (b blockTrackerResult) getTestFileName(from uint64, to uint64) string {
 	fileName := strings.Split(b.outputFilePath, ".")
 
