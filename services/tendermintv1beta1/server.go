@@ -33,14 +33,7 @@ func (s *Server) GetLatestBlock(
 ) (*tendermintv1beta1.GetLatestBlockResponse, error) {
 	s.logger.Info("GetLatestBlock called", "dest", s.client.GrpcAddress.String())
 
-	res, err := s.client.Client.GetLatestBlock(ctx, in)
-	if err != nil {
-		s.logger.Error("connection failed:", "err", err)
-
-		return nil, err
-	}
-
-	return res, nil
+	return s.client.Client.GetLatestBlock(ctx, in)
 }
 
 // GetBlockByHeight queries block for given height.
@@ -50,14 +43,7 @@ func (s *Server) GetBlockByHeight(
 ) (*tendermintv1beta1.GetBlockByHeightResponse, error) {
 	s.logger.Info("GetBlockByHeight called", "dest", s.client.GrpcAddress.String())
 
-	res, err := s.client.Client.GetBlockByHeight(ctx, in)
-	if err != nil {
-		s.logger.Error("connection failed:", "err", err)
-
-		return nil, err
-	}
-
-	return res, nil
+	return s.client.Client.GetBlockByHeight(ctx, in)
 }
 
 // GetLatestValidatorSet queries latest validator-set.
@@ -67,14 +53,7 @@ func (s *Server) GetLatestValidatorSet(
 ) (*tendermintv1beta1.GetLatestValidatorSetResponse, error) {
 	s.logger.Info("GetLatestValidatorSet called", "dest", s.client.GrpcAddress.String())
 
-	res, err := s.client.Client.GetLatestValidatorSet(ctx, in)
-	if err != nil {
-		s.logger.Error("connection failed:", "err", err)
-
-		return nil, err
-	}
-
-	return res, nil
+	return s.client.Client.GetLatestValidatorSet(ctx, in)
 }
 
 // GetValidatorSetByHeight queries validator-set at a given height.
@@ -84,14 +63,7 @@ func (s *Server) GetValidatorSetByHeight(
 ) (*tendermintv1beta1.GetValidatorSetByHeightResponse, error) {
 	s.logger.Info("GetValidatorSetByHeight called", "dest", s.client.GrpcAddress.String())
 
-	res, err := s.client.Client.GetValidatorSetByHeight(ctx, in)
-	if err != nil {
-		s.logger.Error("connection failed:", "err", err)
-
-		return nil, err
-	}
-
-	return res, nil
+	return s.client.Client.GetValidatorSetByHeight(ctx, in)
 }
 
 // GetNodeInfo queries the current node info.
@@ -101,14 +73,7 @@ func (s *Server) GetNodeInfo(
 ) (*tendermintv1beta1.GetNodeInfoResponse, error) {
 	s.logger.Info("GetNodeInfo called", "dest", s.client.GrpcAddress.String())
 
-	res, err := s.client.Client.GetNodeInfo(ctx, in)
-	if err != nil {
-		s.logger.Error("connection failed:", "err", err)
-
-		return nil, err
-	}
-
-	return res, nil
+	return s.client.Client.GetNodeInfo(ctx, in)
 }
 
 // GetSyncing queries node syncing.
@@ -118,12 +83,5 @@ func (s *Server) GetSyncing(
 ) (*tendermintv1beta1.GetSyncingResponse, error) {
 	s.logger.Info("GetSyncing called", "dest", s.client.GrpcAddress.String())
 
-	res, err := s.client.Client.GetSyncing(ctx, in)
-	if err != nil {
-		s.logger.Error("connection failed:", "err", err)
-
-		return nil, err
-	}
-
-	return res, nil
+	return s.client.Client.GetSyncing(ctx, in)
 }

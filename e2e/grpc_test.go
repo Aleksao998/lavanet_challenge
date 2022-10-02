@@ -28,7 +28,7 @@ func TestGetBlockByHeight(t *testing.T) {
 	// save block height
 	blockHeight := res.GetBlock().Header.Height
 
-	// get the latest block from OsmosisMainnet
+	// get the block from OsmosisMainnet on blockHeight
 	expectedOutput, err := client.Client.GetBlockByHeight(
 		context.Background(),
 		&tendermintv1beta1proto.GetBlockByHeightRequest{
@@ -50,7 +50,7 @@ func TestGetBlockByHeight(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// get the latest block from OsmosisMainnet
+	// get the block from lavanet_challenge server on blockHeight
 	serverOutput, err := localClient.Client.GetBlockByHeight(
 		context.Background(),
 		&tendermintv1beta1proto.GetBlockByHeightRequest{
@@ -80,7 +80,7 @@ func TestGetValidatorSetByHeight(t *testing.T) {
 	// save block height
 	blockHeight := res.GetBlock().Header.Height
 
-	// get the latest block from OsmosisMainnet
+	// get the validator set from OsmosisMainnet on blockHeight
 	expectedOutput, err := client.Client.GetValidatorSetByHeight(
 		context.Background(),
 		&tendermintv1beta1proto.GetValidatorSetByHeightRequest{
@@ -102,7 +102,7 @@ func TestGetValidatorSetByHeight(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// get the latest block from OsmosisMainnet
+	// get the validator set from lavanet_challenge server on blockHeight
 	serverOutput, err := localClient.Client.GetValidatorSetByHeight(
 		context.Background(),
 		&tendermintv1beta1proto.GetValidatorSetByHeightRequest{
