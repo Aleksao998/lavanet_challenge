@@ -2,8 +2,8 @@
 
 Lavanet challenge is an interview task for lavanet. The challenge is structured in 2 parts
 
-* **Server** - basically it needs to work as a forward proxy. It needs to be able to register gRPC service, forward the request to a specific network, and return the response
-* **Listener** - service which needs to connect to the server, listen for new events and prints test results
+* **Server** - needs to support a forward proxy service which needs to be able to register gRPC service, forward the request to a specific network, and return the response
+* **Tracker** - needs to connect to the server, listen for new events and prints test results
 
 
 ## Architecture
@@ -18,6 +18,8 @@ The server is the main service of the lavanet_challenge. It can be extended to s
   - Create a server and client implementation from desired service [example](https://github.com/Aleksao998/lavanet_challenge/tree/develop/services/tendermintv1beta1)
   - Extended forward proxy object to keep track of new client [here](https://github.com/Aleksao998/lavanet_challenge/blob/develop/proxy/forwardProxy.go#L31)
   - Register server [here](https://github.com/Aleksao998/lavanet_challenge/blob/develop/proxy/forwardProxy.go#L62)
+
+To see all supported server commands:
 
 ```bash
 go run main.go server --help
@@ -41,11 +43,12 @@ Flags:
 
 Tracker is designed to support multiple specific trackers. This version supports only *block tracker* service. 
 
-- **Block tracker** is a scheduled polling machine whose goal is to print test results for a specified block range. It can be connected to any network which supports *cosmos.base.tendermint.v1beta1.Service.GetLatestBlock* api. Depending on the polling time 3 situations can occur.
+- **Block tracker** is a scheduled polling machine whose goal is to print test results for a specified block range. It can be connected to any network   which supports *cosmos.base.tendermint.v1beta1.Service.GetLatestBlock* api. Depending on the polling time 3 situations can occur.
   - New block arrived, it just needs to save it in the pending queue
   - The same block arrived, it will be skipped
   - Gap occurred so we need to fetch all blocks in between and save them i the pending queue
-  Once a pending queue gets full, the tests result will be exported in the format *fileName_from_to.extension*
+
+Once a pending queue gets full, the tests result will be exported in the format *fileName_from_to.extension*
 
 To see all supported tracker commands:
 
@@ -99,6 +102,12 @@ Start the tracker
   go run main.go tracker
 ```
 
+** To print test results for every new block use: **
+
+```bash
+  go run main.go tracker --output-after 1
+```
+
 To run linter
 
 ```bash
@@ -118,10 +127,12 @@ To test manually first thing you need to do is to install https://github.com/ful
 **Steps to do**:
 
 * Start server with default flags (default server grpc address: **localhost::9632**)
+
 ```bash
   go run main.go server
 ```
-* Start tracker (enable test results after each new block so you don't need to wait for 5 blocks)
+* Start tracker (enable test results after every new block so you don't need to wait for 5 blocks)
+
 ```bash
   go run main.go tracker --output-after 1
 ```
@@ -163,5 +174,5 @@ How to run:
 
 - Before merging the PR, make sure that both *lint* and *test* git action passed
 
-- Existing branching strategy and examples used so far [merged PR-s](https://github.com/Aleksao998/lavanet_challenge/pulls?q=is%3Apr+is%3Aclosed)
+- Existing branching strategy and examples used so far can be found inside [merged PR-s](https://github.com/Aleksao998/lavanet_challenge/pulls?q=is%3Apr+is%3Aclosed)
 
