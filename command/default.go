@@ -11,6 +11,9 @@ const (
 type IPBinding string
 
 const (
+	// LocalHostBinding default local network gRPC endpoint
 	LocalHostBinding IPBinding = "127.0.0.1"
-	DefaultGRPCPort  int       = 9632
+
+	// DefaultGRPCPort default local gRPC endpoint port
+	DefaultGRPCPort int = 9632
 )

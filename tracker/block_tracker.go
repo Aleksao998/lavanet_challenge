@@ -2,13 +2,19 @@ package tracker
 
 import (
 	"context"
+	"errors"
 	"net"
 	"time"
 
 	tendermintv1beta1proto "cosmossdk.io/api/cosmos/base/tendermint/v1beta1"
+	tmbytes "github.com/tendermint/tendermint/libs/bytes"
 
 	"github.com/Aleksao998/lavanet_challenge/services/tendermintv1beta1"
 	"github.com/hashicorp/go-hclog"
+)
+
+var (
+	errUnmarshalHash = errors.New("unable to unmarshal hash")
 )
 
 type blockTracker struct {
@@ -31,6 +37,9 @@ type blockTracker struct {
 
 	// pendingBlocks are blocks which are waiting to be printed
 	pendingBlocks []blockInfo
+
+	// outputAfter is a number after which results will be generated
+	outputAfter uint64
 }
 
 // blockInfo is necessary information from block
@@ -39,7 +48,7 @@ type blockInfo struct {
 	Number uint64 `json:"number"`
 
 	// hash is a block hash
-	Hash string `json:"hash"`
+	Hash *tmbytes.HexBytes `json:"hash"`
 }
 
 // NewBlockTracker creates a new block tracker service
@@ -50,6 +59,7 @@ func NewBlockTracker(
 	clientGrpcAddress *net.TCPAddr,
 	pollingTime uint64,
 	outputFilePath string,
+	outputAfter uint64,
 ) (*blockTracker, error) {
 	blockTracker := &blockTracker{
 		logger:                  logger.Named("block-tracker"),
@@ -57,7 +67,8 @@ func NewBlockTracker(
 		pollingTime:             pollingTime,
 		ticker:                  time.NewTicker(time.Second * time.Duration(pollingTime)),
 		results:                 newBlockTrackerResults(logger, outputFilePath),
-		pendingBlocks:           make([]blockInfo, 0, 5), //print 5 blocks at one the time
+		pendingBlocks:           make([]blockInfo, 0, outputAfter),
+		outputAfter:             outputAfter,
 	}
 
 	// fetch the latest block from client
@@ -110,7 +121,7 @@ func (s *blockTracker) fetchBlocks() error {
 		return err
 	}
 
-	s.logger.Debug("Latest block received", "number", blockInfo.Number, "hash", blockInfo.Hash)
+	s.logger.Debug("Latest block received", "number", blockInfo.Number, "hash", blockInfo.Hash.String())
 
 	// if next block arrived
 	// set new block
@@ -123,7 +134,7 @@ func (s *blockTracker) fetchBlocks() error {
 		// set new from
 		s.fromBlock = blockInfo.Number
 
-		s.logger.Debug("BlockInfo", "number", blockInfo.Number, "hash", blockInfo.Hash)
+		s.logger.Debug("BlockInfo", "number", blockInfo.Number, "hash", blockInfo.Hash.String())
 	}
 
 	// if gap exists
@@ -140,14 +151,14 @@ func (s *blockTracker) fetchBlocks() error {
 
 		// add blocks in the pending queue
 		for _, block := range blocks {
-			s.logger.Debug("BlockInfo", "number", blockInfo.Number, "hash", blockInfo.Hash)
+			s.logger.Debug("BlockInfo", "number", blockInfo.Number, "hash", blockInfo.Hash.String())
 
 			if err := s.addBlockInPending(block); err != nil {
 				return err
 			}
 		}
 
-		// add latest block in the pending queue
+		// add the latest block in the pending queue
 		if err := s.addBlockInPending(*blockInfo); err != nil {
 			return err
 		}
@@ -164,8 +175,10 @@ func (s *blockTracker) fetchBlocks() error {
 func (s *blockTracker) addBlockInPending(block blockInfo) error {
 	s.pendingBlocks = append(s.pendingBlocks, block)
 
+	s.logger.Info("New block added in the pending queue", "number", block.Number, "hash", block.Hash.String())
+
 	// if full print and empty
-	if len(s.pendingBlocks) == 5 {
+	if len(s.pendingBlocks) == int(s.outputAfter) {
 		if err := s.results.writeResults(s.pendingBlocks); err != nil {
 			return err
 		}
@@ -231,7 +244,13 @@ func (s *blockTracker) getBlock(number uint64) (*blockInfo, error) {
 	// extract data from response
 	blockInfo := &blockInfo{
 		Number: uint64(res.GetBlock().Header.Height),
-		Hash:   string(res.BlockId.Hash),
+		Hash:   &tmbytes.HexBytes{},
+	}
+
+	// unmarshal hash
+	err = blockInfo.Hash.Unmarshal(res.BlockId.Hash)
+	if err != nil {
+		return nil, errUnmarshalHash
 	}
 
 	return blockInfo, nil
@@ -253,7 +272,13 @@ func (s *blockTracker) getLatestBlock() (*blockInfo, error) {
 	// extract data from response
 	blockInfo := &blockInfo{
 		Number: uint64(res.GetBlock().Header.Height),
-		Hash:   string(res.BlockId.Hash),
+		Hash:   &tmbytes.HexBytes{},
+	}
+
+	// unmarshal hash
+	err = blockInfo.Hash.Unmarshal(res.BlockId.Hash)
+	if err != nil {
+		return nil, errUnmarshalHash
 	}
 
 	return blockInfo, nil

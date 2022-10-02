@@ -53,6 +53,12 @@ func setFlags(cmd *cobra.Command) {
 		2,
 		"polling time in seconds",
 	)
+	cmd.Flags().Uint64Var(
+		&params.outputAfter,
+		outputAfterFlag,
+		5,
+		"number after which results will be generated",
+	)
 }
 
 func runPreRun(cmd *cobra.Command, _ []string) error {

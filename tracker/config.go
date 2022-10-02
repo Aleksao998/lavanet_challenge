@@ -22,4 +22,7 @@ type Config struct {
 
 	// OutputFilePath location of output file
 	OutputFilePath string
+
+	// OutputAfter is a number after which results will be generated
+	OutputAfter uint64
 }

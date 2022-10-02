@@ -63,6 +63,12 @@ func (b blockTrackerResults) writeResults(blocks []blockInfo) error {
 
 func (b blockTrackerResults) getTestFileName(from uint64, to uint64) string {
 	fileName := strings.Split(b.outputFilePath, ".")
+
+	// correct file name format should be filename.extension
+	if len(fileName) != 2 {
+		return b.outputFilePath
+	}
+
 	fromString := strconv.FormatUint(from, 10)
 	toString := strconv.FormatUint(to, 10)
 
