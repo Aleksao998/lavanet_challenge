@@ -35,6 +35,9 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Go build without race
+        run: CGO_ENABLED=0 GOOS=linux go build -a -o build/lavanet_challenge .
+
       - name: Go test
         run: go test -coverprofile coverage.out -timeout 5m ./...
 
