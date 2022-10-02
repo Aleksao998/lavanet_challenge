@@ -11,6 +11,7 @@ import (
 // generating test file name
 func TestGenerateFileName(t *testing.T) {
 	t.Parallel()
+
 	testTable := []struct {
 		name           string
 		outputFilePath string
@@ -33,6 +34,7 @@ func TestGenerateFileName(t *testing.T) {
 			"resultstest",
 		},
 	}
+
 	for _, testCase := range testTable {
 		testCase := testCase
 		t.Run(testCase.name, func(t *testing.T) {
