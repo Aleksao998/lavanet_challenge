@@ -15,6 +15,7 @@ const (
 	logLevelFlag           = "log-level"
 	pollingTimeFlag        = "polling-time"
 	outputFileLocationFlag = "output-to"
+	outputAfterFlag        = "output-after"
 )
 
 var (
@@ -39,6 +40,9 @@ type trackerParams struct {
 
 	// outputFileLocation location of tracker output file
 	outputFileLocation string
+
+	// outputAfter is a number after which results will be generated
+	outputAfter uint64
 }
 
 func (p *trackerParams) initRawParams() error {
@@ -65,5 +69,6 @@ func (p *trackerParams) generateConfig() *tracker.Config {
 		LogLevel:          hclog.LevelFromString(p.logLevel),
 		LogFilePath:       p.logFileLocation,
 		OutputFilePath:    p.outputFileLocation,
+		OutputAfter:       p.outputAfter,
 	}
 }

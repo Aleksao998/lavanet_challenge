@@ -56,6 +56,7 @@ func (p *serverParams) generateConfig() *server.Config {
 func (p *serverParams) initGRPCAddresses() error {
 	var parseErr error
 
+	// generate grpcAddress from raw
 	if p.grpcAddress, parseErr = helper.ResolveAddr(
 		p.grpcAddressRaw,
 		command.LocalHostBinding,
@@ -63,6 +64,7 @@ func (p *serverParams) initGRPCAddresses() error {
 		return parseErr
 	}
 
+	// generate networkGrpcAddress from raw
 	if p.networkGrpcAddress, parseErr = helper.ResolveAddr(
 		p.networkGrpcAddressRaw,
 		command.OsmosisMainnetGrpcEndpoint,
