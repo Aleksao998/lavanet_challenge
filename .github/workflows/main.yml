@@ -21,3 +21,20 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with: 
           config: .golangci.yml
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18.x
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Go test
+        run: go test -coverprofile coverage.out -timeout 5m ./...
+

@@ -14,7 +14,7 @@ type result struct {
 	TestResult []blockInfo `json:"test_result"`
 }
 
-type blockTrackerResults struct {
+type blockTrackerResult struct {
 	logger hclog.Logger
 
 	// outputFilePath location of output file
@@ -24,15 +24,15 @@ type blockTrackerResults struct {
 func newBlockTrackerResults(
 	logger hclog.Logger,
 	outputFilePath string,
-) blockTrackerResults {
-	return blockTrackerResults{
+) blockTrackerResult {
+	return blockTrackerResult{
 		logger:         logger.Named("tracker-results"),
 		outputFilePath: outputFilePath,
 	}
 }
 
 // writeResults writes results to the outputFilePath
-func (b blockTrackerResults) writeResults(blocks []blockInfo) error {
+func (b blockTrackerResult) writeResults(blocks []blockInfo) error {
 	// marshall data
 	data, err := json.MarshalIndent(
 		result{
@@ -61,7 +61,7 @@ func (b blockTrackerResults) writeResults(blocks []blockInfo) error {
 	return nil
 }
 
-func (b blockTrackerResults) getTestFileName(from uint64, to uint64) string {
+func (b blockTrackerResult) getTestFileName(from uint64, to uint64) string {
 	fileName := strings.Split(b.outputFilePath, ".")
 
 	// correct file name format should be filename.extension
