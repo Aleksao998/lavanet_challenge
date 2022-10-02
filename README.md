@@ -88,6 +88,11 @@ Start the server
   go run main.go server
 ```
 
+** 2nd October osmosis mainnet stopped on 6263920, you can also use testnet **
+```bash
+  go run main.go server --network-grpc-address grpc-test.osmosis.zone:9090
+```
+
 Start the tracker
 
 ```bash
