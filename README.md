@@ -79,7 +79,7 @@ GetValidatorSetByHeight | grpcurl --plaintext -d '{"height":5350708}' localhost:
 Lavanet_challenge has both e2e and unit tests. 
 
 - For e2e test there is a [freamwork](https://github.com/Aleksao998/lavanet_challenge/tree/develop/e2e/framework) which start how many server instances we want. All e2e tests should be placed in the e2e [folder](https://github.com/Aleksao998/lavanet_challenge/tree/develop/e2e)
-- For unit tests there is a [mock clint](https://github.com/Aleksao998/lavanet_challenge/blob/develop/services/tendermintv1beta1/mock_client.go) for existing grpc services
+- For unit tests there is a [mock client](https://github.com/Aleksao998/lavanet_challenge/blob/develop/services/tendermintv1beta1/mock_client.go) for existing grpc services
 
 How to run:
 
