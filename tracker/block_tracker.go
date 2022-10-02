@@ -33,7 +33,7 @@ type blockTracker struct {
 	ticker *time.Ticker
 
 	// results parses tracker data and outputs in the specified file
-	results blockTrackerResults
+	results blockTrackerResult
 
 	// pendingBlocks are blocks which are waiting to be printed
 	pendingBlocks []blockInfo
