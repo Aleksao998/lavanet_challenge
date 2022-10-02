@@ -36,6 +36,18 @@ Start the tracker
   go run main.go tracker
 ```
 
+To run linter
+
+```bash
+  make lint
+```
+
+To build binary
+
+```bash
+  make build
+```
+
 ## Manual testing
 
 To test manually first thing you need to do is to install https://github.com/fullstorydev/grpcurl.
@@ -79,4 +91,12 @@ How to run:
 ```bash
   go test ./...
 ```
+
+## Want to contribute
+
+- The lavanet_challenge uses a relatively basic feature proposition [template](https://github.com/Aleksao998/lavanet_challenge/blob/develop/.github/pull_request_template.md), that is concise and to the point.
+
+- For branching this project uses *branch_type/branch_name* format
+
+- Before merging the PR, make sure that both *lint* and *test* git action passed
 
