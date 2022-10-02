@@ -44,6 +44,9 @@ linters-settings:
   goconst:
     min-len: 3
     min-occurrences: 3
+  dupl:
+      # tokens count to trigger issue, 150 by default
+      threshold: 200
 
 issues:
   new-from-rev: origin/develop # report only new issues with reference to develop branch
