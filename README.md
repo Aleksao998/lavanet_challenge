@@ -1,6 +1,6 @@
 # Lavanet challenge
 
-Lavanet challenge is an interview task for lavanet. The challenge is structured in 2 parts
+Lavanet challenge is an interview task for lava network. The challenge is structured in 2 parts
 
 * **Server** - needs to support a forward proxy service which needs to be able to register gRPC service, forward the request to a specific network, and return the response
 * **Tracker** - needs to connect to the server, listen for new events and prints test results
